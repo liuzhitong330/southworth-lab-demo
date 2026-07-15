@@ -1,264 +1,386 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Druggable Cleft: Tau Fold Selectivity of PET Tracers — Southworth Lab Demo</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#faf8f5; --surface:#fff; --border:#e4ded3;
-  --ink:#1c1c1c; --muted:#7a736a; --accent:#7a4a1e;
-  --ad:#b5651d; --cte:#2c6e8f; --pocket:#c0392b; --lig:#3a8a4a;
-  font-family:'Palatino','Georgia',serif;
-}
-body{background:var(--bg);color:var(--ink);line-height:1.75}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exploratory Structural Analyses Inspired by Southworth Lab Publications</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-#id-banner{background:#efe7db;text-align:center;padding:7px 16px;font-family:-apple-system,sans-serif;font-size:0.78rem;color:#5a5245;border-bottom:1px solid #d8ccb8;}
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 18px;
+      line-height: 1.65;
+      color: #1a1a1a;
+      background: #ffffff;
+      padding: 0 1rem;
+    }
+    .page { max-width: 680px; margin: 0 auto; padding: 3rem 0 5rem; }
 
-header{background:#241a12;color:#f0e6d8;padding:54px 40px 46px;border-bottom:3px solid #4a3520;text-align:center;}
-header h1{font-size:clamp(1.35rem,2.8vw,2rem);font-weight:normal;line-height:1.35;max-width:840px;margin:0 auto;}
-header .sub{margin-top:14px;font-family:-apple-system,sans-serif;font-size:0.78rem;color:#b89a6e}
-header .sub span{color:#e0c48a}
+    h1 { font-size: 1.6rem; line-height: 1.25; font-weight: bold; margin-bottom: 0.4rem; }
+    h2 { font-size: 1.1rem; font-weight: bold; margin: 2.4rem 0 0.5rem; }
+    p  { margin-bottom: 1rem; }
+    a  { color: #1a1a1a; }
 
-article{max-width:870px;margin:0 auto;padding:50px 32px}
-h2{font-size:1.22rem;color:var(--accent);margin:46px 0 14px;border-bottom:1px solid var(--border);padding-bottom:8px;font-style:italic}
-p{margin-bottom:1.15em;color:#2a2a2a}
-strong{color:#000}
-em.hl{color:var(--ad);font-style:normal;font-weight:600}
-.openq{background:#f3ede3;border-left:4px solid var(--accent);padding:16px 20px;margin:26px 0;font-size:0.98rem;border-radius:0 4px 4px 0}
-.openq b{color:var(--accent)}
+    .byline {
+      color: #555; font-size: 0.9rem; margin-bottom: 2.4rem;
+      font-family: system-ui, sans-serif; line-height: 1.6;
+    }
+    hr { border: none; border-top: 1px solid #ddd; margin: 2.4rem 0; }
 
-.fig-box{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:22px 24px;margin:26px 0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.fig-label{font-family:-apple-system,sans-serif;font-size:0.72rem;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.07em}
-.fig-caption{font-family:-apple-system,sans-serif;font-size:0.8rem;color:#665e54;margin-top:14px;line-height:1.55}
+    .section-nav {
+      font-family: system-ui, sans-serif; font-size: 0.82rem;
+      color: #888; margin-bottom: 2.4rem;
+    }
+    .section-nav a { color: #555; margin-right: 1rem; text-decoration: none; }
 
-#tooltip{position:fixed;pointer-events:none;background:#241a12;border:1px solid #7a4a1e;border-radius:5px;padding:8px 12px;font-family:-apple-system,sans-serif;font-size:0.77rem;color:#f0e6d8;max-width:230px;z-index:1000;display:none;line-height:1.5}
-#tt-title{font-weight:700;color:#e0c48a;margin-bottom:2px}
+    .experiment { border-left: 3px solid #1a1a1a; padding-left: 1.2rem; margin: 1.5rem 0; }
+    .exp-label {
+      font-family: system-ui, sans-serif; font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.08em; color: #777; margin-bottom: 0.3rem;
+    }
+    .exp-title { font-weight: bold; font-size: 1rem; margin-bottom: 0.6rem; }
 
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-.tgl{background:transparent;border:1px solid var(--border);border-radius:4px;padding:6px 14px;font-family:-apple-system,sans-serif;font-size:0.8rem;cursor:pointer;color:var(--muted)}
-.tgl.active{color:#fff;border-color:transparent}
-.tgl.active.ad{background:var(--ad)}
-.tgl.active.cte{background:var(--cte)}
-.chk{font-family:-apple-system,sans-serif;font-size:0.79rem;color:#4a4a4a;display:flex;align-items:center;gap:6px;cursor:pointer;margin-left:6px}
+    .metric-row {
+      display: flex; gap: 2rem; margin: 1rem 0; flex-wrap: wrap;
+      font-family: system-ui, sans-serif;
+    }
+    .metric { display: flex; flex-direction: column; }
+    .metric-val { font-size: 1.5rem; font-weight: bold; line-height: 1; }
+    .metric-desc { color: #666; font-size: 0.8rem; margin-top: 0.15rem; }
 
-#fold-svg{width:100%;max-width:560px;display:block;margin:0 auto;background:#fcfbf9;border-radius:4px}
-.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;justify-content:center;font-family:-apple-system,sans-serif;font-size:0.76rem;color:#555}
-.legend-item{display:flex;align-items:center;gap:6px}
-.ldot{width:11px;height:11px;border-radius:50%}
+    .label-inline {
+      font-family: system-ui, sans-serif; font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #888; margin: 0.4rem 0 0.2rem; display: block;
+    }
+    figcaption {
+      font-family: system-ui, sans-serif; font-size: 0.78rem; color: #777;
+      margin-top: 0.5rem; line-height: 1.45;
+    }
+    .note { font-size: 0.82rem; color: #666; font-family: system-ui, sans-serif; margin-top: 0.6rem; }
 
-/* bar chart */
-.bars{font-family:-apple-system,sans-serif;font-size:0.8rem}
-.bar-row{display:flex;align-items:center;gap:10px;margin:9px 0}
-.bar-lbl{width:96px;text-align:right;color:#444;flex-shrink:0;font-variant-numeric:tabular-nums}
-.bar-track{flex:1;position:relative;height:26px;background:#f2ede5;border-radius:3px;overflow:hidden}
-.bar-fill{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;padding-left:8px;color:#fff;font-size:0.74rem;font-weight:600}
-.bar-fill.ad{background:var(--ad)}
-.bar-fill.cte{background:var(--cte)}
-.bar-pair{width:150px;flex-shrink:0}
+    /* interactive panels kept visually quiet to match the document */
+    .panel { border: 1px solid #e0e0e0; border-radius: 2px; padding: 1rem 1.1rem; margin: 1rem 0; background: #fcfcfc; }
+    .controls { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.8rem; }
+    .tgl {
+      background: #fff; border: 1px solid #ccc; border-radius: 3px; padding: 5px 12px;
+      font-family: system-ui, sans-serif; font-size: 0.8rem; cursor: pointer; color: #666;
+    }
+    .tgl.active.ad { background: rgb(175,38,38); color: #fff; border-color: rgb(175,38,38); }
+    .tgl.active.cte { background: rgb(34,90,158); color: #fff; border-color: rgb(34,90,158); }
+    .chk { font-family: system-ui, sans-serif; font-size: 0.78rem; color: #555; display: flex; align-items: center; gap: 5px; cursor: pointer; margin-left: 4px; }
 
-/* live tool */
-.query-bar{margin-top:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.query-bar input{background:#fcfbf9;border:1px solid var(--border);border-radius:4px;padding:7px 12px;color:var(--ink);font-family:-apple-system,sans-serif;font-size:0.85rem;width:120px;text-transform:uppercase}
-.query-bar button{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:7px 16px;font-family:-apple-system,sans-serif;font-size:0.82rem;cursor:pointer}
-.query-bar button:hover{background:#96602a}
-.suggest{font-family:-apple-system,sans-serif;font-size:0.76rem;color:var(--muted)}
-.suggest a{color:var(--cte);cursor:pointer;text-decoration:none;border-bottom:1px dotted var(--cte)}
-#live-status{font-family:-apple-system,sans-serif;font-size:0.78rem;color:var(--muted)}
-#live-status.error{color:var(--pocket)}
+    #fold-svg, #live-svg { width: 100%; max-width: 520px; display: block; margin: 0 auto; background: #fff; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; justify-content: center; font-family: system-ui, sans-serif; font-size: 0.75rem; color: #555; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .ldot { width: 10px; height: 10px; border-radius: 50%; }
 
-footer{background:#241a12;color:#a8906e;text-align:center;padding:18px 24px;font-family:-apple-system,sans-serif;font-size:0.78rem;margin-top:40px}
-footer a{color:#e0c48a}
-</style>
+    .bars { font-family: system-ui, sans-serif; font-size: 0.8rem; }
+    .bar-pair { font-size: 0.82rem; color: #333; margin: 0.7rem 0 0.25rem; font-weight: bold; }
+    .bar-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+    .bar-lbl { width: 78px; text-align: right; color: #555; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .bar-track { flex: 1; position: relative; height: 22px; background: #f0f0f0; border-radius: 2px; overflow: hidden; }
+    .bar-fill { position: absolute; top: 0; left: 0; height: 100%; display: flex; align-items: center; padding-left: 7px; color: #fff; font-size: 0.72rem; font-weight: 600; }
+    .bar-fill.ad { background: rgb(175,38,38); }
+    .bar-fill.cte { background: rgb(34,90,158); }
+
+    .query-bar { margin-top: 0.9rem; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .query-bar input {
+      background: #fff; border: 1px solid #ccc; border-radius: 3px; padding: 6px 10px;
+      font-family: system-ui, sans-serif; font-size: 0.85rem; width: 110px; text-transform: uppercase;
+    }
+    .query-bar button {
+      background: #1a1a1a; color: #fff; border: none; border-radius: 3px; padding: 6px 14px;
+      font-family: system-ui, sans-serif; font-size: 0.8rem; cursor: pointer;
+    }
+    .suggest { font-family: system-ui, sans-serif; font-size: 0.76rem; color: #888; margin-top: 0.6rem; }
+    .suggest a { color: rgb(34,90,158); cursor: pointer; text-decoration: none; border-bottom: 1px dotted; }
+    #live-status { font-family: system-ui, sans-serif; font-size: 0.78rem; color: #777; }
+    #live-status.error { color: rgb(175,38,38); }
+
+    #tooltip {
+      position: fixed; pointer-events: none; background: #1a1a1a; color: #fff;
+      border-radius: 3px; padding: 6px 10px; font-family: system-ui, sans-serif;
+      font-size: 0.76rem; max-width: 220px; z-index: 100; display: none; line-height: 1.45;
+    }
+    #tt-title { font-weight: 700; margin-bottom: 2px; }
+
+    footer {
+      font-family: system-ui, sans-serif; font-size: 0.82rem; color: #888;
+      margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #eee; line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
-
-<div id="id-banner">Cathy Liu · cathyliu014@gmail.com · personal exploratory project, July 2026</div>
 <div id="tooltip"><div id="tt-title"></div><div id="tt-body"></div></div>
+<div class="page">
 
-<header>
-  <h1>The Druggable Cleft:<br>Why a PET Tracer Sees Alzheimer's Tau but Not CTE — and How to Read the Difference</h1>
-  <p class="sub">Interactive demo · <span>Southworth Lab, UCSF</span> · Data: PDB 8UQ7, 6NWP, 8FUG (cryo-EM) + live RCSB queries</p>
-</header>
-
-<article>
-
-<p>A tau fibril is not one thing. The same protein folds into structurally distinct amyloid cores in different diseases — the paired-helical filament (PHF) of Alzheimer's, the Type-I fold of chronic traumatic encephalopathy (CTE), the flat fold of PSP. Each is a different "strain," and each presents a different molecular surface. This is the central insight the Southworth lab has helped establish through cryo-EM: <strong>disease identity is written into fibril conformation.</strong></p>
-
-<p>It matters clinically because PET imaging tracers — the molecules that let us see tau in a living brain — bind these folds selectively. The lab's 2024 structure of the second-generation tracer <strong>MK-6240</strong> bound to Alzheimer's PHF (PDB 8UQ7, 2.31 Å) revealed exactly where it docks: a narrow cleft on the fibril surface lined by Gln351, Lys353, and Ile360. But MK-6240 is an Alzheimer's tracer. It does not reliably light up CTE tau. Why not — when both folds are built from the very same residues?</p>
-
-<div class="openq">
-  <b>The open question this demo targets.</b> The lab can now generate defined AD and CTE folds in vitro (the 2025 mini-prion system) <em>and</em> solve tracer-bound structures. The missing piece is a way to <b>read the binding cleft across folds</b> — to predict, from structure alone, which folds a given tracer will engage. Below, I take the real coordinates and measure the cleft directly.
-</div>
-
-<h2>Figure 1 — The Same Residues, a Different Cleft</h2>
-
-<p>Below is the actual ordered core of tau (residues 305–379) viewed down the fibril axis — one rung of the amyloid stack, projected from real cryo-EM coordinates. Toggle between the Alzheimer's fold (PDB 8UQ7) and the CTE fold (PDB 6NWP). The MK-6240 ligand, shown in green, was solved in the Alzheimer's structure; watch what happens to the cleft that holds it when the backbone re-folds into CTE.</p>
-
-<div class="fig-box">
-  <div class="fig-label">Cα backbone cross-section · real PDB coordinates · hover any residue</div>
-  <div class="controls">
-    <button class="tgl ad active" id="btn-ad" onclick="setFold('ad')">Alzheimer's PHF · 8UQ7</button>
-    <button class="tgl cte" id="btn-cte" onclick="setFold('cte')">CTE Type I · 6NWP</button>
-    <label class="chk"><input type="checkbox" id="show-lig" checked onchange="render()"> MK-6240 ligand</label>
-    <label class="chk"><input type="checkbox" id="show-pocket" checked onchange="render()"> pocket residues</label>
+  <h1>Exploratory Structural Analyses Inspired by Southworth Lab Publications</h1>
+  <div class="byline">
+    Cathy Liu &nbsp;·&nbsp; Structural Bioinformatics &nbsp;·&nbsp; cathyliu014@gmail.com<br>
+    Prepared for the Southworth Lab, UCSF Institute for Neurodegenerative Diseases<br>
+    Personal exploratory project, July 2026
   </div>
-  <svg id="fold-svg" viewBox="0 0 560 460" xmlns="http://www.w3.org/2000/svg"></svg>
-  <div class="legend">
-    <div class="legend-item"><div class="ldot" style="background:var(--ad)" id="leg-bb"></div><span id="leg-bb-txt">Tau backbone</span></div>
-    <div class="legend-item"><div class="ldot" style="background:var(--pocket)"></div>Binding-cleft residues (350–360)</div>
-    <div class="legend-item"><div class="ldot" style="background:var(--lig)"></div>MK-6240</div>
+
+  <div class="section-nav">
+    <a href="#motivation">Motivation</a>
+    <a href="#a1">Analysis 1</a>
+    <a href="#a2">Analysis 2</a>
+    <a href="#tool">Live Tool</a>
+    <a href="#relevance">Relevance</a>
   </div>
-  <p class="fig-caption">In the Alzheimer's fold, residues 351/353/360 wrap tightly around MK-6240. Switching to CTE keeps the same residues but swings them apart — the cleft opens and the ligand footprint no longer fits snugly.</p>
-</div>
 
-<h2>Figure 2 — Measuring the Cleft: a Structural Fingerprint</h2>
-
-<p>The visual impression can be made quantitative. The MK-6240 pocket is walled by two strands; the distance between them sets whether a rigid tracer fits. I measured Cα–Cα distances for the pocket-defining residue pairs in both folds, directly from the deposited coordinates.</p>
-
-<div class="fig-box">
-  <div class="fig-label">Pocket Cα–Cα distances · computed from PDB 8UQ7 (AD) and 6NWP (CTE)</div>
-  <div class="bars" id="bars"></div>
-  <p class="fig-caption">The cleft-defining Gln351–Ile360 span opens from <strong>18.1 Å in Alzheimer's to 21.4 Å in CTE</strong> — a 3.2 Å widening of the exact pocket MK-6240 occupies. A tracer optimized to bridge 18 Å loses its grip at 21 Å. This is a concrete, measurable structural basis for fold selectivity — and a design axis: a CTE-selective tracer would need a longer rigid spacer.</p>
-</div>
-
-<h2>Figure 3 — Read Any Fold: Live Cross-Section from the PDB</h2>
-
-<p>The method above generalises. Enter any tau-filament PDB ID and this tool fetches the coordinates live from the RCSB, extracts the ordered core, computes the cross-section by principal-axis projection in your browser, and renders the fold. It is the same pipeline I would build to screen the growing library of strain and tracer-bound structures for their pocket geometry.</p>
-
-<div class="fig-box">
-  <div class="fig-label">Live RCSB fetch → in-browser projection → fold cross-section</div>
-  <svg id="live-svg" viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg"></svg>
-  <div class="query-bar">
-    <input id="pdb-input" type="text" placeholder="PDB ID" maxlength="4" value="8FUG">
-    <button onclick="loadPDB()">Render fold</button>
-    <span id="live-status"></span>
-  </div>
-  <p class="suggest" style="margin-top:10px">
-    Try:
-    <a onclick="quick('8FUG')">8FUG</a> (AD + tracer GTP-1) ·
-    <a onclick="quick('6NWQ')">6NWQ</a> (CTE Type II) ·
-    <a onclick="quick('8UQ7')">8UQ7</a> (AD + MK-6240) ·
-    <a onclick="quick('6NWP')">6NWP</a> (CTE Type I)
+  <p>
+    The Southworth lab has built one of the largest collections of tau fibril structures solved by cryo-EM.
+    A single idea runs through much of that work: the same tau protein folds into different shapes in
+    different diseases, and the shape is what decides how the fibril behaves. PET imaging tracers make this
+    concrete. A tracer that lights up Alzheimer's tau in a brain scan can stay dark in another tauopathy,
+    even though the protein sequence is identical.
   </p>
+  <p>
+    I wanted to see how much of that difference can be read straight from the deposited coordinates, with no
+    new experiment. Below are two short analyses I ran on the lab's published structures, followed by a small
+    tool that repeats the method on any structure in the PDB.
+  </p>
+
+  <hr id="motivation">
+
+  <h2>The question these analyses target</h2>
+  <p>
+    The lab's 2024 structure of the tracer MK-6240 bound to Alzheimer's tau (PDB 8UQ7) shows exactly where the
+    molecule sits: a shallow pocket formed by residues Gln351, Lys353, and Ile360. The obvious follow-up is
+    whether that same pocket exists in other folds. If it collapses or opens too wide in the CTE fold, that
+    would explain why an Alzheimer's tracer does not carry over. With the mini-prion system the lab published
+    in 2025, defined AD and CTE fibrils can now be made on demand, so this comparison is no longer just a
+    thought experiment. It is something the lab can test directly.
+  </p>
+
+  <hr id="a1">
+
+  <h2>Analysis 1 — Does the MK-6240 pocket survive in the CTE fold?</h2>
+  <div class="experiment">
+    <div class="exp-label">Method</div>
+    <div class="exp-title">Projecting the ordered tau core from two deposited structures and overlaying the tracer</div>
+    <p style="margin-top:0.6rem; font-size:0.92rem;">
+      I took the Cα coordinates for the ordered core of tau (residues 305 to 379) from the Alzheimer's
+      structure (8UQ7) and the CTE Type I structure (6NWP), projected each onto the plane facing down the
+      fibril axis, and placed the MK-6240 ligand from the Alzheimer's model into the view. Use the buttons to
+      switch folds. Hover any residue to see its identity.
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="controls">
+      <button class="tgl ad active" id="btn-ad" onclick="setFold('ad')">Alzheimer's · 8UQ7</button>
+      <button class="tgl cte" id="btn-cte" onclick="setFold('cte')">CTE Type I · 6NWP</button>
+      <label class="chk"><input type="checkbox" id="show-lig" checked onchange="render()"> MK-6240</label>
+      <label class="chk"><input type="checkbox" id="show-pocket" checked onchange="render()"> pocket residues</label>
+    </div>
+    <svg id="fold-svg" viewBox="0 0 520 440" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="legend">
+      <div class="legend-item"><div class="ldot" id="leg-bb" style="background:rgb(175,38,38)"></div><span id="leg-bb-txt">Alzheimer's backbone</span></div>
+      <div class="legend-item"><div class="ldot" style="background:#222"></div>Pocket residues 350–360</div>
+      <div class="legend-item"><div class="ldot" style="background:rgb(60,140,90)"></div>MK-6240</div>
+    </div>
+    <figcaption>
+      One layer of the amyloid stack, viewed down the fibril axis, drawn from real PDB coordinates.
+      In the Alzheimer's fold the pocket residues sit close around the tracer. Switching to CTE keeps those
+      same residues in the same order along the chain, but the backbone routes them along a different path,
+      and the pocket is no longer the same shape.
+    </figcaption>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric"><span class="metric-val">2.31 Å</span><span class="metric-desc">8UQ7 resolution</span></div>
+    <div class="metric"><span class="metric-val">75</span><span class="metric-desc">ordered residues</span></div>
+    <div class="metric"><span class="metric-val">7</span><span class="metric-desc">residues within 8 Å of ligand</span></div>
+  </div>
+
+  <hr id="a2">
+
+  <h2>Analysis 2 — Putting a number on the pocket</h2>
+  <div class="experiment">
+    <div class="exp-label">Method</div>
+    <div class="exp-title">Cα–Cα distances across the pocket, measured from the deposited models</div>
+    <p style="margin-top:0.6rem; font-size:0.92rem;">
+      A picture is easy to over-read, so I measured it. The pocket is bounded by two strands, and the gap
+      between them decides whether a rigid molecule can bridge it. I computed the same set of distances in
+      both folds from the deposited coordinates.
+    </p>
+  </div>
+
+  <div class="panel">
+    <span class="label-inline">Pocket Cα–Cα distances · 8UQ7 (AD) vs 6NWP (CTE)</span>
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <p>
+    The distance across the mouth of the pocket, from Gln351 to Ile360, is 18.1 Å in the Alzheimer's fold and
+    21.4 Å in CTE. That is a 3.2 Å difference at the exact site MK-6240 occupies. A tracer shaped to fit an
+    18 Å gap has little to hold onto at 21 Å. This gives a simple, measurable reason for the selectivity, and
+    it also points to what a CTE-directed tracer would likely need: a longer rigid core to span the wider
+    opening.
+  </p>
+
+  <hr id="tool">
+
+  <h2>The same method on any structure</h2>
+  <div class="experiment">
+    <div class="exp-label">Tool</div>
+    <div class="exp-title">Live cross-section from any tau-filament PDB entry</div>
+    <p style="margin-top:0.6rem; font-size:0.92rem;">
+      The measurement above is not specific to two structures. Enter any PDB ID and this tool fetches the
+      coordinates from the RCSB, pulls out the ordered core, computes the cross-section by principal-axis
+      projection in the browser, and draws the fold. It is the same routine I would want to run across every
+      structure the lab deposits, rather than comparing them one at a time by hand.
+    </p>
+  </div>
+
+  <div class="panel">
+    <svg id="live-svg" viewBox="0 0 520 400" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="query-bar">
+      <input id="pdb-input" type="text" placeholder="PDB ID" maxlength="4" value="8FUG">
+      <button onclick="loadPDB()">Render fold</button>
+      <span id="live-status"></span>
+    </div>
+    <div class="suggest">
+      Try
+      <a onclick="quick('8FUG')">8FUG</a> (AD with tracer GTP-1),
+      <a onclick="quick('6NWQ')">6NWQ</a> (CTE Type II),
+      <a onclick="quick('8UQ7')">8UQ7</a> (AD with MK-6240),
+      <a onclick="quick('6NWP')">6NWP</a> (CTE Type I).
+    </div>
+  </div>
+
+  <hr id="relevance">
+
+  <h2>Why this matters for the Southworth lab</h2>
+  <p>
+    The three views share one idea. Different folds produce different pockets, the pockets can be measured, and
+    the measurement can be run across every structure the lab deposits without waiting for new data. Paired
+    with the mini-prion fibrils, this becomes a way to compare candidate tracers against defined folds before
+    committing microscope time, and to flag which folds a given tracer is unlikely to reach.
+  </p>
+
+  <h2>What I would bring</h2>
+  <p>
+    My background is in structural and computational analysis: parsing coordinate files, geometry and distance
+    calculations, and building small tools that turn a repeated manual comparison into something reproducible.
+    I would be glad to help build a pocket-comparison pipeline across the lab's tau structures, and to extend it
+    to the tracer-bound and mini-prion datasets as they grow. The questions the lab works on, strain-specific
+    folds and the molecules that read them, are exactly the kind of problem where careful analysis of the
+    coordinates adds real value.
+  </p>
+
+  <h2>Methods note</h2>
+  <p style="font-size:0.9rem; color:#444;">
+    Coordinates were downloaded from the RCSB PDB (8UQ7, 6NWP, 8FUG). Cross-sections were produced by
+    principal-axis projection of the Cα atoms of one fibril layer. Distances are Cα to Cα, taken directly from
+    the deposited models. Pocket residues are those with a Cα within 8 Å of the MK-6240 ligand in 8UQ7. The
+    live tool fetches coordinates from the RCSB and runs the same projection in the browser. No new
+    experimental data was generated.
+  </p>
+
+  <footer>
+    Cathy Liu &nbsp;·&nbsp; cathyliu014@gmail.com &nbsp;·&nbsp; 415-216-3799<br>
+    Epilepsy neurostimulation project, <a href="https://arxiv.org/abs/2606.04339">arXiv:2606.04339</a>
+  </footer>
+
 </div>
-
-<p>Put together, these three views trace a single idea: strain-specific folds create strain-specific clefts, the clefts are measurable, and the measurements can be automated across every structure the lab deposits. The natural next experiment — pairing the mini-prion system's defined AD and CTE fibrils with a panel of tracers and reading each pocket as it forms — is exactly the kind of structure-to-function analysis I would want to contribute to.</p>
-
-</article>
-
-<footer>
-  Cathy Liu — cathyliu014@gmail.com | 415-216-3799 · Epilepsy neurostimulation project · <a href="https://arxiv.org/abs/2606.04339">arXiv:2606.04339</a>
-</footer>
 
 <script>
-// ══ REAL PDB-DERIVED DATA (8UQ7 AD + MK-6240, 6NWP CTE) ══════════
+// Real PDB-derived data (8UQ7 AD + MK-6240, 6NWP CTE)
 const FOLD = {"ad":[{"res":305,"aa":"S","x":-40.53,"y":13.41},{"res":306,"aa":"V","x":-37.21,"y":11.5},{"res":307,"aa":"Q","x":-36.51,"y":7.84},{"res":308,"aa":"I","x":-32.89,"y":6.62},{"res":309,"aa":"V","x":-32.28,"y":2.94},{"res":310,"aa":"Y","x":-28.61,"y":1.86},{"res":311,"aa":"K","x":-28.16,"y":-1.9},{"res":312,"aa":"P","x":-25.03,"y":-3.3},{"res":313,"aa":"V","x":-24.63,"y":-7.05},{"res":314,"aa":"D","x":-21.07,"y":-8.4},{"res":315,"aa":"L","x":-20.13,"y":-12.13},{"res":316,"aa":"S","x":-16.57,"y":-11.55},{"res":317,"aa":"K","x":-13.73,"y":-14.05},{"res":318,"aa":"V","x":-10.1,"y":-12.96},{"res":319,"aa":"T","x":-8.07,"y":-16.1},{"res":320,"aa":"S","x":-4.81,"y":-17.99},{"res":321,"aa":"K","x":-3.15,"y":-21.38},{"res":322,"aa":"C","x":0.6,"y":-22.07},{"res":323,"aa":"G","x":2.03,"y":-25.54},{"res":324,"aa":"S","x":5.39,"y":-24.07},{"res":325,"aa":"L","x":6.95,"y":-20.59},{"res":326,"aa":"G","x":10.7,"y":-20.05},{"res":327,"aa":"N","x":14.35,"y":-20.31},{"res":328,"aa":"I","x":14.48,"y":-16.53},{"res":329,"aa":"H","x":17.88,"y":-14.73},{"res":330,"aa":"H","x":18.15,"y":-10.91},{"res":331,"aa":"K","x":21.88,"y":-9.96},{"res":332,"aa":"P","x":22.43,"y":-6.35},{"res":333,"aa":"G","x":26.03,"y":-5.1},{"res":334,"aa":"G","x":25.84,"y":-1.68},{"res":335,"aa":"G","x":25.88,"y":1.55},{"res":336,"aa":"Q","x":26.17,"y":5.34},{"res":337,"aa":"V","x":23.61,"y":8.2},{"res":338,"aa":"E","x":24.05,"y":12.0},{"res":339,"aa":"V","x":21.29,"y":14.65},{"res":340,"aa":"K","x":21.66,"y":18.45},{"res":341,"aa":"S","x":18.75,"y":20.86},{"res":342,"aa":"E","x":18.37,"y":24.33},{"res":343,"aa":"K","x":14.64,"y":24.68},{"res":344,"aa":"L","x":11.88,"y":22.1},{"res":345,"aa":"D","x":8.25,"y":23.29},{"res":346,"aa":"F","x":5.79,"y":20.38},{"res":347,"aa":"K","x":2.04,"y":21.13},{"res":348,"aa":"D","x":-1.1,"y":18.94},{"res":349,"aa":"R","x":-0.93,"y":15.15},{"res":350,"aa":"V","x":2.71,"y":14.8},{"res":351,"aa":"Q","x":4.48,"y":11.4},{"res":352,"aa":"S","x":8.17,"y":11.97},{"res":353,"aa":"K","x":11.49,"y":10.09},{"res":354,"aa":"I","x":14.81,"y":11.88},{"res":355,"aa":"G","x":18.31,"y":10.32},{"res":356,"aa":"S","x":17.64,"y":6.63},{"res":357,"aa":"L","x":19.47,"y":3.31},{"res":358,"aa":"D","x":16.72,"y":0.98},{"res":359,"aa":"N","x":16.56,"y":-2.83},{"res":360,"aa":"I","x":13.16,"y":-4.53},{"res":361,"aa":"T","x":12.34,"y":-8.26},{"res":362,"aa":"H","x":8.56,"y":-8.64},{"res":363,"aa":"V","x":7.3,"y":-12.27},{"res":364,"aa":"P","x":3.7,"y":-12.48},{"res":365,"aa":"G","x":2.2,"y":-16.02},{"res":366,"aa":"G","x":-1.02,"y":-14.48},{"res":367,"aa":"G","x":-0.63,"y":-10.76},{"res":368,"aa":"N","x":-4.17,"y":-10.57},{"res":369,"aa":"K","x":-5.97,"y":-7.16},{"res":370,"aa":"K","x":-9.61,"y":-5.99},{"res":371,"aa":"I","x":-10.26,"y":-2.21},{"res":372,"aa":"E","x":-13.94,"y":-1.19},{"res":373,"aa":"T","x":-15.26,"y":2.43},{"res":374,"aa":"H","x":-18.95,"y":3.36},{"res":375,"aa":"K","x":-19.87,"y":7.07},{"res":376,"aa":"L","x":-23.46,"y":8.43},{"res":377,"aa":"T","x":-23.83,"y":12.24},{"res":378,"aa":"F","x":-27.16,"y":14.1},{"res":379,"aa":"R","x":-27.08,"y":17.9}],"cte":[{"res":305,"aa":"S","x":-42.92,"y":20.55},{"res":306,"aa":"V","x":-39.57,"y":18.79},{"res":307,"aa":"Q","x":-39.6,"y":15.07},{"res":308,"aa":"I","x":-36.36,"y":13.04},{"res":309,"aa":"V","x":-36.11,"y":9.31},{"res":310,"aa":"Y","x":-32.58,"y":7.85},{"res":311,"aa":"K","x":-32.91,"y":4.05},{"res":312,"aa":"P","x":-29.96,"y":2.29},{"res":313,"aa":"V","x":-29.86,"y":-1.45},{"res":314,"aa":"D","x":-26.53,"y":-3.33},{"res":315,"aa":"L","x":-26.44,"y":-7.15},{"res":316,"aa":"S","x":-22.99,"y":-7.3},{"res":317,"aa":"K","x":-20.32,"y":-9.97},{"res":318,"aa":"V","x":-16.55,"y":-9.59},{"res":319,"aa":"T","x":-15.19,"y":-13.11},{"res":320,"aa":"S","x":-11.97,"y":-15.09},{"res":321,"aa":"K","x":-11.16,"y":-18.78},{"res":322,"aa":"C","x":-7.54,"y":-19.89},{"res":323,"aa":"G","x":-6.51,"y":-23.55},{"res":324,"aa":"S","x":-2.97,"y":-22.75},{"res":325,"aa":"L","x":-0.82,"y":-19.62},{"res":326,"aa":"G","x":2.88,"y":-19.95},{"res":327,"aa":"N","x":6.54,"y":-20.52},{"res":328,"aa":"I","x":7.19,"y":-16.79},{"res":329,"aa":"H","x":10.82,"y":-15.66},{"res":330,"aa":"H","x":11.78,"y":-11.99},{"res":331,"aa":"K","x":15.56,"y":-11.56},{"res":332,"aa":"P","x":16.46,"y":-7.89},{"res":333,"aa":"G","x":20.02,"y":-6.57},{"res":334,"aa":"G","x":22.04,"y":-9.8},{"res":335,"aa":"G","x":24.65,"y":-7.92},{"res":336,"aa":"Q","x":27.67,"y":-6.09},{"res":337,"aa":"V","x":27.43,"y":-2.28},{"res":338,"aa":"E","x":30.54,"y":-0.05},{"res":339,"aa":"V","x":30.25,"y":3.76},{"res":340,"aa":"K","x":33.66,"y":5.5},{"res":341,"aa":"S","x":33.18,"y":9.29},{"res":342,"aa":"E","x":36.1,"y":11.77},{"res":343,"aa":"K","x":36.34,"y":15.61},{"res":344,"aa":"L","x":32.61,"y":16.37},{"res":345,"aa":"D","x":31.3,"y":19.82},{"res":346,"aa":"F","x":27.64,"y":20.25},{"res":347,"aa":"K","x":26.07,"y":23.69},{"res":348,"aa":"D","x":22.44,"y":22.63},{"res":349,"aa":"R","x":20.52,"y":19.71},{"res":350,"aa":"V","x":21.74,"y":16.14},{"res":351,"aa":"Q","x":19.64,"y":12.93},{"res":352,"aa":"S","x":21.53,"y":9.64},{"res":353,"aa":"K","x":20.09,"y":6.1},{"res":354,"aa":"I","x":22.56,"y":3.23},{"res":355,"aa":"G","x":21.84,"y":-0.52},{"res":356,"aa":"S","x":18.46,"y":-2.32},{"res":357,"aa":"L","x":15.62,"y":-0.05},{"res":358,"aa":"D","x":11.79,"y":-0.02},{"res":359,"aa":"N","x":11.46,"y":-3.5},{"res":360,"aa":"I","x":7.99,"y":-4.97},{"res":361,"aa":"T","x":6.65,"y":-8.53},{"res":362,"aa":"H","x":2.87,"y":-8.21},{"res":363,"aa":"V","x":1.02,"y":-11.55},{"res":364,"aa":"P","x":-2.69,"y":-11.27},{"res":365,"aa":"G","x":-4.87,"y":-14.39},{"res":366,"aa":"G","x":-7.63,"y":-12.28},{"res":367,"aa":"G","x":-6.75,"y":-8.64},{"res":368,"aa":"N","x":-10.25,"y":-7.98},{"res":369,"aa":"K","x":-11.31,"y":-4.31},{"res":370,"aa":"K","x":-14.76,"y":-2.67},{"res":371,"aa":"I","x":-15.01,"y":1.15},{"res":372,"aa":"E","x":-18.54,"y":2.59},{"res":373,"aa":"T","x":-19.32,"y":6.33},{"res":374,"aa":"H","x":-22.84,"y":7.76},{"res":375,"aa":"K","x":-23.39,"y":11.52},{"res":376,"aa":"L","x":-26.74,"y":13.34},{"res":377,"aa":"T","x":-26.12,"y":17.08},{"res":378,"aa":"F","x":-29.07,"y":19.48},{"res":379,"aa":"R","x":-28.84,"y":23.24}],"ligand":[[4.77,5.45],[7.55,3.36],[7.97,8.05],[7.85,6.85],[8.77,6.51],[7.63,4.53],[6.57,2.4],[7.99,1.75],[9.58,3.56],[6.67,4.79],[5.84,6.3],[5.99,7.48],[5.1,7.81],[7.05,8.34],[8.63,5.39],[6.79,1.4],[8.72,1.14],[9.84,1.78],[10.23,2.95],[8.43,2.99],[6.77,5.97],[4.13,5.68],[4.66,4.62],[8.79,8.72],[9.6,7.16],[5.75,2.45],[9.93,4.51],[5.86,4.09],[7.15,9.26],[6.19,0.51],[8.41,0.19],[10.41,1.32],[3.66,4.66],[6.54,2.71],[6.79,7.37],[6.71,6.19],[7.66,5.88],[6.58,3.88],[5.59,1.73],[7.04,1.13],[8.57,2.99],[5.6,4.09],[4.71,5.55],[4.82,6.73],[3.91,7.02],[5.86,7.63],[7.55,4.76],[5.84,0.74],[7.8,0.57],[8.9,1.24],[9.25,2.41],[7.44,2.38],[5.66,5.27],[3.01,4.87],[3.59,3.84],[7.59,8.08],[8.46,6.56],[4.77,1.73],[8.9,3.95],[4.81,3.37],[5.92,8.54],[5.27,-0.16],[7.52,-0.39],[9.49,0.81]],"pocket":[350,351,352,353,358,359,360]};
 
-// Pocket Cα–Cα distances computed from 3D coords (Å)
 const DIST = [
-  {pair:'Gln351 – Ile360', ad:18.1, cte:21.4, note:'cleft walls'},
-  {pair:'Lys353 – Ile360', ad:14.8, cte:16.4, note:''},
-  {pair:'Gln351 – Asp358', ad:16.1, cte:15.2, note:''},
-  {pair:'Ser352 – Asp358', ad:13.9, cte:13.8, note:''},
+  {pair:'Gln351 – Ile360 (pocket mouth)', ad:18.1, cte:21.4},
+  {pair:'Lys353 – Ile360', ad:14.8, cte:16.4},
+  {pair:'Gln351 – Asp358', ad:16.1, cte:15.2},
+  {pair:'Ser352 – Asp358', ad:13.9, cte:13.8},
 ];
 
-const SVG='http://www.w3.org/2000/svg';
+const NS='http://www.w3.org/2000/svg';
 const tip=document.getElementById('tooltip');
 const ttT=document.getElementById('tt-title'), ttB=document.getElementById('tt-body');
-function el(t,a={}){const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
-function showTip(e,title,body){ttT.textContent=title;ttB.textContent=body;tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}
+function el(t,a={}){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+function showTip(e,title,body){ttT.textContent=title;ttB.textContent=body;tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-8)+'px';}
 function hideTip(){tip.style.display='none';}
 
-// ── FIGURE 1 : fold viewer ─────────────────────────────────
+const AA3={A:'Ala',R:'Arg',N:'Asn',D:'Asp',C:'Cys',Q:'Gln',E:'Glu',G:'Gly',H:'His',I:'Ile',L:'Leu',K:'Lys',M:'Met',F:'Phe',P:'Pro',S:'Ser',T:'Thr',W:'Trp',Y:'Tyr',V:'Val'};
+const AD_COL='rgb(175,38,38)', CTE_COL='rgb(34,90,158)', POCKET_COL='#222', LIG_COL='rgb(60,140,90)';
+
+function mkT(W,H,pad,pts){
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+  const s=Math.min((W-2*pad)/(xmax-xmin),(H-2*pad)/(ymax-ymin));
+  const ox=(W-s*(xmax+xmin))/2, oy=(H+s*(ymax+ymin))/2;
+  return (x,y)=>[ox+s*x, oy-s*y];
+}
+
+// Figure 1
 let curFold='ad';
 const foldSvg=document.getElementById('fold-svg');
-const AA3={A:'Ala',R:'Arg',N:'Asn',D:'Asp',C:'Cys',Q:'Gln',E:'Glu',G:'Gly',H:'His',I:'Ile',L:'Leu',K:'Lys',M:'Met',F:'Phe',P:'Pro',S:'Ser',T:'Thr',W:'Trp',Y:'Tyr',V:'Val'};
-
 function setFold(f){
   curFold=f;
   document.getElementById('btn-ad').classList.toggle('active',f==='ad');
   document.getElementById('btn-cte').classList.toggle('active',f==='cte');
-  const col=f==='ad'?getCss('--ad'):getCss('--cte');
-  document.getElementById('leg-bb').style.background=col;
+  document.getElementById('leg-bb').style.background=f==='ad'?AD_COL:CTE_COL;
   document.getElementById('leg-bb-txt').textContent=f==='ad'?"Alzheimer's backbone":'CTE backbone';
   render();
 }
-function getCss(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
-
-// Transform Å coords → SVG. Fixed scale so AD & CTE are comparable.
-function mkT(W,H,pad,allPts){
-  const xs=allPts.map(p=>p[0]), ys=allPts.map(p=>p[1]);
-  const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
-  const s=Math.min((W-2*pad)/(xmax-xmin),(H-2*pad)/(ymax-ymin));
-  const ox=(W-s*(xmax+xmin))/2, oy=(H+s*(ymax+ymin))/2;
-  return (x,y)=>[ox+s*x, oy-s*y];  // flip y
-}
-
 function render(){
   while(foldSvg.firstChild) foldSvg.removeChild(foldSvg.firstChild);
   const data=FOLD[curFold];
   const showLig=document.getElementById('show-lig').checked;
   const showPocket=document.getElementById('show-pocket').checked;
-  const col=curFold==='ad'?getCss('--ad'):getCss('--cte');
-  // shared transform across both folds so scale is honest
+  const col=curFold==='ad'?AD_COL:CTE_COL;
   const allPts=[...FOLD.ad,...FOLD.cte].map(p=>[p.x,p.y]).concat(FOLD.ligand);
-  const T=mkT(560,460,34,allPts);
+  const T=mkT(520,440,32,allPts);
 
-  // ligand blob (only meaningful for AD; on CTE show as dashed footprint)
   if(showLig){
     const lp=FOLD.ligand.map(p=>T(p[0],p[1]));
     const cx=lp.reduce((a,p)=>a+p[0],0)/lp.length, cy=lp.reduce((a,p)=>a+p[1],0)/lp.length;
     if(curFold==='ad'){
-      lp.forEach(p=>foldSvg.appendChild(el('circle',{cx:p[0],cy:p[1],r:6,fill:getCss('--lig'),opacity:0.32})));
-      const c=el('circle',{cx:cx,cy:cy,r:3,fill:getCss('--lig')});
-      foldSvg.appendChild(c);
-      const lbl=el('text',{x:cx,y:cy-26,'text-anchor':'middle',fill:getCss('--lig'),'font-family':'-apple-system,sans-serif','font-size':'11','font-weight':'700'});
+      lp.forEach(p=>foldSvg.appendChild(el('circle',{cx:p[0],cy:p[1],r:6,fill:LIG_COL,opacity:0.3})));
+      const lbl=el('text',{x:cx,y:cy-24,'text-anchor':'middle',fill:LIG_COL,'font-family':'system-ui,sans-serif','font-size':'11','font-weight':'700'});
       lbl.textContent='MK-6240'; foldSvg.appendChild(lbl);
     } else {
-      // footprint outline where the ligand WAS, to show misfit
-      lp.forEach(p=>foldSvg.appendChild(el('circle',{cx:p[0],cy:p[1],r:6,fill:'none',stroke:getCss('--lig'),'stroke-dasharray':'2 2',opacity:0.5})));
-      const lbl=el('text',{x:cx,y:cy-26,'text-anchor':'middle',fill:getCss('--lig'),'font-family':'-apple-system,sans-serif','font-size':'10','font-weight':'600'});
-      lbl.textContent='AD ligand footprint'; foldSvg.appendChild(lbl);
+      lp.forEach(p=>foldSvg.appendChild(el('circle',{cx:p[0],cy:p[1],r:6,fill:'none',stroke:LIG_COL,'stroke-dasharray':'2 2',opacity:0.5})));
+      const lbl=el('text',{x:cx,y:cy-24,'text-anchor':'middle',fill:LIG_COL,'font-family':'system-ui,sans-serif','font-size':'10','font-weight':'600'});
+      lbl.textContent='where MK-6240 sits in AD'; foldSvg.appendChild(lbl);
     }
   }
 
-  // backbone polyline
   let d='';
   data.forEach((p,i)=>{const[sx,sy]=T(p.x,p.y);d+=(i?'L':'M')+sx.toFixed(1)+' '+sy.toFixed(1)+' ';});
-  foldSvg.appendChild(el('path',{d:d,fill:'none',stroke:col,'stroke-width':2.4,'stroke-linejoin':'round',opacity:0.85}));
+  foldSvg.appendChild(el('path',{d:d,fill:'none',stroke:col,'stroke-width':2.2,'stroke-linejoin':'round',opacity:0.85}));
 
-  // residue dots
   data.forEach(p=>{
     const[sx,sy]=T(p.x,p.y);
     const inPocket=FOLD.pocket.includes(p.res);
-    const r=inPocket&&showPocket?5:3;
-    const fill=inPocket&&showPocket?getCss('--pocket'):col;
-    const c=el('circle',{cx:sx,cy:sy,r:r,fill:fill,opacity:inPocket&&showPocket?1:0.75,cursor:'pointer'});
-    c.addEventListener('mousemove',e=>showTip(e,`${AA3[p.aa]}${p.res}`,inPocket?'MK-6240 binding-cleft residue':'Ordered core (R3–R4)'));
+    const r=inPocket&&showPocket?5:2.8;
+    const fill=inPocket&&showPocket?POCKET_COL:col;
+    const c=el('circle',{cx:sx,cy:sy,r:r,fill:fill,opacity:inPocket&&showPocket?1:0.7,cursor:'pointer'});
+    c.addEventListener('mousemove',e=>showTip(e,`${AA3[p.aa]}${p.res}`,inPocket?'MK-6240 pocket residue':'Ordered core (repeats R3–R4)'));
     c.addEventListener('mouseleave',hideTip);
     foldSvg.appendChild(c);
     if(inPocket&&showPocket&&[351,353,360].includes(p.res)){
-      const t=el('text',{x:sx+7,y:sy+3,fill:getCss('--pocket'),'font-family':'-apple-system,sans-serif','font-size':'9.5','font-weight':'700','pointer-events':'none'});
+      const t=el('text',{x:sx+7,y:sy+3,fill:POCKET_COL,'font-family':'system-ui,sans-serif','font-size':'9.5','font-weight':'700','pointer-events':'none'});
       t.textContent=p.aa+p.res; foldSvg.appendChild(t);
     }
   });
-
-  // N/C termini labels
   const n0=T(data[0].x,data[0].y), c0=T(data[data.length-1].x,data[data.length-1].y);
-  const nt=el('text',{x:n0[0]-6,y:n0[1]-8,fill:'#999','font-family':'-apple-system,sans-serif','font-size':'11','font-style':'italic'});nt.textContent='N';foldSvg.appendChild(nt);
-  const ct=el('text',{x:c0[0]-6,y:c0[1]-8,fill:'#999','font-family':'-apple-system,sans-serif','font-size':'11','font-style':'italic'});ct.textContent='C';foldSvg.appendChild(ct);
+  const nt=el('text',{x:n0[0]-6,y:n0[1]-8,fill:'#aaa','font-family':'system-ui,sans-serif','font-size':'11','font-style':'italic'});nt.textContent='N';foldSvg.appendChild(nt);
+  const ct=el('text',{x:c0[0]-6,y:c0[1]-8,fill:'#aaa','font-family':'system-ui,sans-serif','font-size':'11','font-style':'italic'});ct.textContent='C';foldSvg.appendChild(ct);
 }
 setFold('ad');
 
-// ── FIGURE 2 : distance bars ───────────────────────────────
-const maxD=24;
-const barsEl=document.getElementById('bars');
+// Figure 2
+const maxD=24, barsEl=document.getElementById('bars');
 DIST.forEach(row=>{
   const wrap=document.createElement('div');
-  wrap.innerHTML=`<div style="font-size:0.82rem;color:#333;margin:12px 0 4px;font-weight:600">${row.pair}${row.note?` <span style="color:var(--pocket);font-weight:400">— ${row.note}</span>`:''}</div>`;
-  [['ad','Alzheimer\'s',row.ad],['cte','CTE',row.cte]].forEach(([cls,name,val])=>{
+  const h=document.createElement('div'); h.className='bar-pair'; h.textContent=row.pair; wrap.appendChild(h);
+  [['ad',"Alzheimer's",row.ad],['cte','CTE',row.cte]].forEach(([cls,name,val])=>{
     const r=document.createElement('div'); r.className='bar-row';
     r.innerHTML=`<div class="bar-lbl">${name}</div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${val/maxD*100}%">${val.toFixed(1)} Å</div></div>`;
     wrap.appendChild(r);
@@ -266,97 +388,72 @@ DIST.forEach(row=>{
   barsEl.appendChild(wrap);
 });
 
-// ── FIGURE 3 : live PDB fold ───────────────────────────────
+// Live tool
 const liveSvg=document.getElementById('live-svg');
 function quick(id){document.getElementById('pdb-input').value=id;loadPDB();}
-
-// 3×3 symmetric eigen (Jacobi) for PCA
 function eigen3(A){
-  let a=A.map(r=>r.slice());
-  let V=[[1,0,0],[0,1,0],[0,0,1]];
-  for(let sweep=0;sweep<50;sweep++){
-    let off=Math.abs(a[0][1])+Math.abs(a[0][2])+Math.abs(a[1][2]);
-    if(off<1e-9)break;
+  let a=A.map(r=>r.slice()), V=[[1,0,0],[0,1,0],[0,0,1]];
+  for(let s=0;s<50;s++){
+    if(Math.abs(a[0][1])+Math.abs(a[0][2])+Math.abs(a[1][2])<1e-9)break;
     for(const[p,q] of [[0,1],[0,2],[1,2]]){
       if(Math.abs(a[p][q])<1e-12)continue;
       const th=(a[q][q]-a[p][p])/(2*a[p][q]);
       const t=Math.sign(th)/(Math.abs(th)+Math.sqrt(th*th+1));
-      const c=1/Math.sqrt(t*t+1), s=t*c;
-      for(let k=0;k<3;k++){
-        const akp=a[k][p],akq=a[k][q];
-        a[k][p]=c*akp-s*akq; a[k][q]=s*akp+c*akq;
-      }
-      for(let k=0;k<3;k++){
-        const apk=a[p][k],aqk=a[q][k];
-        a[p][k]=c*apk-s*aqk; a[q][k]=s*apk+c*aqk;
-      }
-      for(let k=0;k<3;k++){
-        const vkp=V[k][p],vkq=V[k][q];
-        V[k][p]=c*vkp-s*vkq; V[k][q]=s*vkp+c*vkq;
-      }
+      const c=1/Math.sqrt(t*t+1), sn=t*c;
+      for(let k=0;k<3;k++){const akp=a[k][p],akq=a[k][q];a[k][p]=c*akp-sn*akq;a[k][q]=sn*akp+c*akq;}
+      for(let k=0;k<3;k++){const apk=a[p][k],aqk=a[q][k];a[p][k]=c*apk-sn*aqk;a[q][k]=sn*apk+c*aqk;}
+      for(let k=0;k<3;k++){const vkp=V[k][p],vkq=V[k][q];V[k][p]=c*vkp-sn*vkq;V[k][q]=sn*vkp+c*vkq;}
     }
   }
-  const ev=[a[0][0],a[1][1],a[2][2]];
-  const idx=[0,1,2].sort((i,j)=>ev[j]-ev[i]);
-  return idx.map(i=>[V[0][i],V[1][i],V[2][i]]); // eigenvectors, desc eigenvalue
+  const ev=[a[0][0],a[1][1],a[2][2]], idx=[0,1,2].sort((i,j)=>ev[j]-ev[i]);
+  return idx.map(i=>[V[0][i],V[1][i],V[2][i]]);
 }
-
 async function loadPDB(){
   const id=document.getElementById('pdb-input').value.trim().toUpperCase();
   const status=document.getElementById('live-status');
   if(id.length!==4){status.className='error';status.textContent='Enter a 4-character PDB ID.';return;}
-  status.className='';status.textContent=`Fetching ${id} from RCSB…`;
+  status.className='';status.textContent=`Fetching ${id} from RCSB...`;
   try{
     const resp=await fetch(`https://files.rcsb.org/download/${id}.pdb`);
     if(!resp.ok) throw new Error(`PDB ${id} not found`);
     const text=await resp.text();
-    // first protein chain, CA atoms, first altloc
     const seen=new Set(); let chain=null; const pts=[];
     const AA={ALA:'A',ARG:'R',ASN:'N',ASP:'D',CYS:'C',GLN:'Q',GLU:'E',GLY:'G',HIS:'H',ILE:'I',LEU:'L',LYS:'K',MET:'M',PHE:'F',PRO:'P',SER:'S',THR:'T',TRP:'W',TYR:'Y',VAL:'V'};
     for(const line of text.split('\n')){
       if(!line.startsWith('ATOM')) continue;
       if(line.slice(12,16).trim()!=='CA') continue;
-      const ch=line[21];
-      if(chain===null) chain=ch;
-      if(ch!==chain) continue;
-      const rn=parseInt(line.slice(22,26));
-      if(seen.has(rn)) continue; seen.add(rn);
+      const ch=line[21]; if(chain===null) chain=ch; if(ch!==chain) continue;
+      const rn=parseInt(line.slice(22,26)); if(seen.has(rn)) continue; seen.add(rn);
       const aa=AA[line.slice(17,20).trim()]||'X';
       pts.push({res:rn,aa:aa,c:[parseFloat(line.slice(30,38)),parseFloat(line.slice(38,46)),parseFloat(line.slice(46,54))]});
     }
     if(pts.length<8) throw new Error(`No ordered protein chain in ${id}`);
-    // PCA
-    const n=pts.length;
-    const mean=[0,1,2].map(k=>pts.reduce((a,p)=>a+p.c[k],0)/n);
+    const n=pts.length, mean=[0,1,2].map(k=>pts.reduce((a,p)=>a+p.c[k],0)/n);
     const cov=[[0,0,0],[0,0,0],[0,0,0]];
-    pts.forEach(p=>{const d=[p.c[0]-mean[0],p.c[1]-mean[1],p.c[2]-mean[2]];
-      for(let i=0;i<3;i++)for(let j=0;j<3;j++)cov[i][j]+=d[i]*d[j]/n;});
-    const evec=eigen3(cov);
-    const b1=evec[0], b2=evec[1];
-    const proj=pts.map(p=>{const d=[p.c[0]-mean[0],p.c[1]-mean[1],p.c[2]-mean[2]];
-      return {res:p.res,aa:p.aa,x:d[0]*b1[0]+d[1]*b1[1]+d[2]*b1[2],y:d[0]*b2[0]+d[1]*b2[1]+d[2]*b2[2]};});
+    pts.forEach(p=>{const d=[p.c[0]-mean[0],p.c[1]-mean[1],p.c[2]-mean[2]];for(let i=0;i<3;i++)for(let j=0;j<3;j++)cov[i][j]+=d[i]*d[j]/n;});
+    const evec=eigen3(cov), b1=evec[0], b2=evec[1];
+    const proj=pts.map(p=>{const d=[p.c[0]-mean[0],p.c[1]-mean[1],p.c[2]-mean[2]];return {res:p.res,aa:p.aa,x:d[0]*b1[0]+d[1]*b1[1]+d[2]*b1[2],y:d[0]*b2[0]+d[1]*b2[1]+d[2]*b2[2]};});
     drawLive(proj,id,chain);
-    status.textContent=`${id} · chain ${chain} · ${pts.length} residues (${proj[0].res}–${proj[proj.length-1].res}) projected in browser.`;
+    status.textContent=`${id}, chain ${chain}, ${pts.length} residues (${proj[0].res}–${proj[proj.length-1].res}) projected in the browser.`;
   }catch(err){status.className='error';status.textContent=`Error: ${err.message}`;}
 }
-
 function drawLive(data,id,chain){
   while(liveSvg.firstChild) liveSvg.removeChild(liveSvg.firstChild);
-  const T=mkT(560,420,34,data.map(p=>[p.x,p.y]));
+  const T=mkT(520,400,32,data.map(p=>[p.x,p.y]));
   let d='';data.forEach((p,i)=>{const[sx,sy]=T(p.x,p.y);d+=(i?'L':'M')+sx.toFixed(1)+' '+sy.toFixed(1)+' ';});
-  liveSvg.appendChild(el('path',{d:d,fill:'none',stroke:getCss('--accent'),'stroke-width':2.4,'stroke-linejoin':'round',opacity:0.8}));
+  liveSvg.appendChild(el('path',{d:d,fill:'none',stroke:'#333','stroke-width':2.2,'stroke-linejoin':'round',opacity:0.8}));
   data.forEach(p=>{
     const[sx,sy]=T(p.x,p.y);
     const inPocket=FOLD.pocket.includes(p.res);
-    const c=el('circle',{cx:sx,cy:sy,r:inPocket?5:3,fill:inPocket?getCss('--pocket'):getCss('--accent'),opacity:inPocket?1:0.7,cursor:'pointer'});
-    c.addEventListener('mousemove',e=>showTip(e,`${AA3[p.aa]||p.aa}${p.res}`,inPocket?'Homologous to MK-6240 cleft':'Ordered core'));
+    const c=el('circle',{cx:sx,cy:sy,r:inPocket?5:2.8,fill:inPocket?POCKET_COL:'#555',opacity:inPocket?1:0.65,cursor:'pointer'});
+    c.addEventListener('mousemove',e=>showTip(e,`${AA3[p.aa]||p.aa}${p.res}`,inPocket?'Same numbering as MK-6240 pocket':'Ordered core'));
     c.addEventListener('mouseleave',hideTip);
     liveSvg.appendChild(c);
   });
-  const t=el('text',{x:280,y:24,'text-anchor':'middle',fill:'#999','font-family':'-apple-system,sans-serif','font-size':'12'});
-  t.textContent=`${id} · chain ${chain} — cross-section`; liveSvg.appendChild(t);
+  const t=el('text',{x:260,y:22,'text-anchor':'middle',fill:'#999','font-family':'system-ui,sans-serif','font-size':'12'});
+  t.textContent=`${id}, chain ${chain}`; liveSvg.appendChild(t);
 }
-loadPDB(); // auto-load 8FUG
+loadPDB();
 </script>
 </body>
 </html>
